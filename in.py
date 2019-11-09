@@ -2,11 +2,13 @@ import numpy as np
 from matplotlib import pyplot
 import time,sys
 
-nx = 41         #Number of gridpoints
-dx =2/(nx-1)    #distance between any pair of adjacent grid points
-nt = 25         #Number of timesteps
-dt = .025       #dt is the amount of time each step covers
-c =1            #assume wavespeed =1
+nx = 41                     #Number of gridpoints
+dx =2/(nx-1)                #distance between any pair of adjacent grid points
+nt = 25                     #Number of timesteps
+sigma = 0.2                 #a parameter
+nu = 0.3                    #viscosity
+dt = sigma * dx**2 /nu      #dt is the amount of time each step covers defined using sigma
+c =1                        #assume wavespeed =1
 
 # Set up initial conditions
 #u =2 in the interval 0.5<= x<=1
@@ -25,8 +27,8 @@ un = np.ones(nx)    #initializing a temp array
 
 for n in range(nt):     #loop for all vals of n from 0 to nt(Number of timesteps)
     un = u.copy()
-    for i in range(1,nx):
-        u[i]=un[i] - c * dt/dx * (un[i]-un[i-1])
+    for i in range(1, nx - 1):
+        u[i] = un[i] + nu * dt / dx**2 * (un[i+1] - 2 * un[i] + un[i-1])
 
 
 print(u)
